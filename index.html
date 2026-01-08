@@ -5,7 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Manual de instruções interativo para o Oculus Quest - Versão Web">
     <title>Manual do Oculus Quest</title>
+    
+    <!-- Configuração do Tailwind para permitir Dark Mode via classe -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        // Paleta personalizada Salmão
+                        salmon: {
+                            50: '#fff1f1',
+                            100: '#ffe4e6', // Rose-ish
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e', // Vibrant Salmon/Rose
+                            600: '#e11d48', // Text readable
+                            700: '#be123c',
+                            800: '#9f1239',
+                            900: '#881337',
+                        }
+                    },
+                    animation: {
+                        'slow-spin': 'spin 20s linear infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -22,9 +52,15 @@
         ::-webkit-scrollbar-track {
             background: #f1f1f1; 
         }
+        .dark ::-webkit-scrollbar-track {
+            background: #000000; /* Preto no track */
+        }
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1; 
             border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #3f3f46; /* Zinc-700 para contraste */
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8; 
@@ -34,7 +70,6 @@
             margin-top: 1.5em;
             margin-bottom: 0.5em;
             font-weight: 600;
-            color: #1e293b;
         }
         .prose ul {
             list-style-type: disc;
@@ -44,17 +79,134 @@
         .prose li {
             margin-bottom: 0.5em;
         }
+
+        /* --- SISTEMA ORGANICO COMPLEXO (SLIME) --- */
+        
+        .blob-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Garante que o container não capture eventos de mouse excessivos que atrapalhem a página */
+            pointer-events: none; 
+        }
+
+        .blob-core, .blob-satellite {
+            position: absolute;
+            /* Cores vibrantes: Salmão Neon (rgb 251, 113, 133) para Laranja Rosado */
+            background: linear-gradient(135deg, rgba(251, 113, 133, 0.6) 0%, rgba(244, 63, 94, 0.6) 100%);
+            border-radius: 50%;
+            backdrop-filter: blur(8px);
+            animation: color-cycle 30s linear infinite; 
+            
+            /* Sombra interna e externa intensificadas para brilho "neon" */
+            box-shadow: 
+                inset 0 0 30px rgba(255, 255, 255, 0.3), /* Brilho especular interno */
+                0 0 25px rgba(251, 113, 133, 0.4), /* Glow externo salmão */
+                0 0 50px rgba(244, 63, 94, 0.2); /* Glow difuso vermelho/rosa */
+            
+            /* Transições suaves para a interatividade JS */
+            transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.3s, height 0.3s, filter 0.3s;
+            will-change: transform, border-radius;
+        }
+
+        /* Núcleo Principal */
+        .blob-core {
+            width: 180px;
+            height: 180px;
+            z-index: 10;
+            /* Animações nativas (rodam quando não há interação JS sobrescrevendo transform) */
+            animation: 
+                morph-base 10s ease-in-out infinite alternate,
+                heartbeat-subtle 3s ease-in-out infinite,
+                color-cycle 30s linear infinite;
+        }
+
+        /* Partes menores (Satélites) */
+        .blob-satellite {
+            width: 80px;
+            height: 80px;
+            z-index: 5;
+            opacity: 0.7; /* Opacidade maior para satélites mais visíveis */
+        }
+
+        .sat-1 { animation: float-1 12s ease-in-out infinite, color-cycle 30s linear infinite reverse; }
+        .sat-2 { animation: float-2 15s ease-in-out infinite, color-cycle 30s linear infinite; width: 60px; height: 60px; }
+        .sat-3 { animation: float-3 10s ease-in-out infinite, color-cycle 30s linear infinite reverse; width: 40px; height: 40px; }
+
+        /* Ícone Centralizado */
+        .blob-icon {
+            z-index: 20;
+            position: relative;
+        }
+
+        /* --- KEYFRAMES --- */
+
+        @keyframes heartbeat-subtle {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.03); } 
+            30% { transform: scale(1); }
+            45% { transform: scale(1.01); } 
+            100% { transform: scale(1); }
+        }
+
+        @keyframes color-cycle {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(45deg); } /* Reduzido o range para manter tons quentes */
+        }
+
+        @keyframes morph-base {
+            0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+            100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+        }
+
+        @keyframes float-1 {
+            0%, 100% { transform: translate(0, 0); border-radius: 50%; }
+            33% { transform: translate(40px, -20px); border-radius: 60% 40% 30% 70%; }
+            66% { transform: translate(-20px, 10px); border-radius: 30% 60% 70% 40%; }
+        }
+        @keyframes float-2 {
+            0%, 100% { transform: translate(0, 0); border-radius: 40% 60% 70% 30%; }
+            50% { transform: translate(-45px, -15px); border-radius: 60% 30% 40% 70%; }
+        }
+        @keyframes float-3 {
+            0%, 100% { transform: translate(0, 0); border-radius: 50%; }
+            50% { transform: translate(30px, 35px); border-radius: 30% 70% 70% 30%; }
+        }
+
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-slate-50 text-slate-800 dark:bg-black dark:text-zinc-200 transition-colors duration-300">
+
+    <!-- Theme Toggle Button (Fixed - Top Right) -->
+    <button id="theme-toggle" class="fixed top-4 right-4 z-50 p-3 rounded-full bg-white dark:bg-zinc-800 shadow-lg border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-yellow-400 hover:scale-110 transition-all duration-300" aria-label="Alternar tema">
+        <i data-lucide="sun" id="theme-icon-sun" class="hidden dark:block"></i>
+        <i data-lucide="moon" id="theme-icon-moon" class="block dark:hidden"></i>
+    </button>
+
+    <!-- Scroll to Top Button (Fixed - Bottom Right) -->
+    <button id="scroll-top-btn" class="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-salmon-500 text-white shadow-lg border border-salmon-600 hover:bg-salmon-600 hover:scale-110 transition-all duration-500 opacity-0 invisible translate-y-10" aria-label="Voltar ao topo">
+        <i data-lucide="arrow-up"></i>
+    </button>
 
     <!-- Mobile Header -->
-    <header class="lg:hidden bg-white border-b border-slate-200 p-4 sticky top-0 z-50 flex justify-between items-center shadow-sm">
-        <div class="flex items-center gap-2 font-bold text-lg text-indigo-600">
-            <i data-lucide="glasses"></i>
-            <span>Oculus Quest</span>
+    <header class="lg:hidden bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 p-4 sticky top-0 z-40 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-2 font-bold text-lg text-salmon-600 dark:text-salmon-400">
+            <!-- Ícone de Manual NANO -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                <path d="M6 8v3h2"/>
+                <circle cx="8" cy="11" r="1" fill="currentColor" stroke="none"/>
+                <rect x="14" y="8" width="4" height="4" rx="1"/>
+                <path d="M16 12v3"/>
+            </svg>
+            <span>Manual NANO</span>
         </div>
-        <button id="menu-btn" class="p-2 rounded-md hover:bg-slate-100 transition-colors" aria-label="Abrir menu">
+        <button id="menu-btn" class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors" aria-label="Abrir menu">
             <i data-lucide="menu"></i>
         </button>
     </header>
@@ -62,49 +214,46 @@
     <div class="flex max-w-7xl mx-auto min-h-screen">
         
         <!-- Sidebar Navigation -->
-        <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 lg:static lg:w-72 bg-white border-r border-slate-200 overflow-y-auto transition-transform duration-300 z-40 shadow-lg lg:shadow-none">
-            <div class="p-6 sticky top-0 bg-white z-10 hidden lg:block">
-                <div class="flex items-center gap-2 font-bold text-lg text-indigo-600 mb-2">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 lg:static lg:w-72 bg-white dark:bg-black border-r border-slate-200 dark:border-zinc-800 overflow-y-auto transition-transform duration-300 z-40 shadow-lg lg:shadow-none">
+            <div class="p-6 sticky top-0 bg-white dark:bg-black z-10 hidden lg:block transition-colors duration-300">
+                <div class="flex items-center gap-2 font-bold text-lg text-salmon-600 dark:text-salmon-400 mb-2">
                     <!-- Ícone de Manual: Livro Aberto com Circuito e Chip -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <!-- Base do Livro Aberto -->
                         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                        <!-- Elementos de Circuito (Página Esquerda) -->
                         <path d="M6 8v3h2"/>
                         <circle cx="8" cy="11" r="1" fill="currentColor" stroke="none"/>
-                        <!-- Elementos de Chip (Página Direita) -->
                         <rect x="14" y="8" width="4" height="4" rx="1"/>
                         <path d="M16 12v3"/>
                     </svg>
                     <span>Manual NANO</span>
                 </div>
-                <p class="text-sm text-slate-500">Versão 1.10</p>
+                <p class="text-sm text-slate-500 dark:text-zinc-500">Versão 1.10</p>
             </div>
 
             <nav class="px-4 py-2 space-y-1" id="nav-links">
-                <a href="#intro" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg bg-indigo-50 text-indigo-700">
+                <a href="#intro" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg bg-salmon-50 dark:bg-zinc-900 text-salmon-700 dark:text-salmon-300 border dark:border-zinc-800">
                     <i data-lucide="box" class="w-4 h-4"></i> Conteúdo do Kit
                 </a>
-                <a href="#before" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                <a href="#before" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-900 hover:text-salmon-600 dark:hover:text-salmon-300 transition-colors">
                     <i data-lucide="alert-circle" class="w-4 h-4"></i> Antes de Usar
                 </a>
-                <a href="#adjusting" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                <a href="#adjusting" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-900 hover:text-salmon-600 dark:hover:text-salmon-300 transition-colors">
                     <i data-lucide="sliders" class="w-4 h-4"></i> Ajustes e Uso
                 </a>
-                <a href="#controllers" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                <a href="#controllers" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-900 hover:text-salmon-600 dark:hover:text-salmon-300 transition-colors">
                     <i data-lucide="gamepad-2" class="w-4 h-4"></i> Controladores
                 </a>
-                <a href="#setup" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                <a href="#setup" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-900 hover:text-salmon-600 dark:hover:text-salmon-300 transition-colors">
                     <i data-lucide="smartphone" class="w-4 h-4"></i> Configuração (App)
                 </a>
-                <a href="#guardian" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                <a href="#guardian" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-900 hover:text-salmon-600 dark:hover:text-salmon-300 transition-colors">
                     <i data-lucide="shield-check" class="w-4 h-4"></i> Área Guardian
                 </a>
-                <a href="#apps" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                <a href="#apps" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-900 hover:text-salmon-600 dark:hover:text-salmon-300 transition-colors">
                     <i data-lucide="grid" class="w-4 h-4"></i> Apps e Explorar
                 </a>
-                <a href="#tips" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                <a href="#tips" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-900 hover:text-salmon-600 dark:hover:text-salmon-300 transition-colors">
                     <i data-lucide="lightbulb" class="w-4 h-4"></i> Dicas Úteis
                 </a>
                 <div class="h-8"></div> <!-- Spacer -->
@@ -115,59 +264,79 @@
         <div id="overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
 
         <!-- Main Content -->
-        <main class="flex-1 min-w-0">
+        <main class="flex-1 min-w-0 relative overflow-hidden bg-slate-50 dark:bg-black transition-colors duration-300">
+            <!-- Elemento Decorativo de Fundo (Opcional, para dar profundidade) -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-96 bg-gradient-to-b from-salmon-50/50 to-transparent dark:from-salmon-900/10 pointer-events-none -z-10"></div>
+
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 pb-24">
                 
+                <!-- Área do Organismo Vivo Interativo -->
+                <!-- Nota: Adicionado ID 'blob-area' para referência no JS -->
+                <div id="blob-area" class="flex justify-center items-center py-10 mb-6 relative" style="min-height: 300px;">
+                    <div class="blob-container">
+                        <!-- Núcleo Central -->
+                        <div class="blob-core"></div>
+                        
+                        <!-- Partes menores ("Slimes") -->
+                        <div class="blob-satellite sat-1"></div>
+                        <div class="blob-satellite sat-2"></div>
+                        <div class="blob-satellite sat-3"></div>
+
+                        <!-- Ícone Central (REMOVIDO) -->
+                        <div class="blob-icon text-white/80 mix-blend-overlay animate-pulse">
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Hero Section -->
-                <div class="mb-12 border-b border-slate-200 pb-8">
-                    <h1 class="text-4xl font-bold text-slate-900 mb-4">Manual do Usuário Oculus Quest</h1>
-                    <p class="text-lg text-slate-600">Guia resumido de configuração, uso e cuidados para o headset VR</p>
+                <div class="mb-12 border-b border-slate-200 dark:border-zinc-800 pb-8 text-center">
+                    <h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-4">Manual do Usuário Oculus Quest</h1>
+                    <p class="text-lg text-slate-600 dark:text-zinc-400">Guia resumido de configuração, uso e cuidados para o headset VR</p>
                 </div>
 
                 <!-- Kit Contents -->
                 <section id="intro" class="mb-16 scroll-mt-24">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <span class="bg-indigo-100 text-indigo-600 p-2 rounded-lg"><i data-lucide="box"></i></span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="bg-salmon-100 dark:bg-salmon-900/50 text-salmon-600 dark:text-salmon-300 p-2 rounded-lg"><i data-lucide="box"></i></span>
                         Conteúdo do Kit
                     </h2>
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 p-6 transition-colors duration-300">
                         <ul class="grid sm:grid-cols-2 gap-4">
                             <li class="flex items-start gap-3">
-                                <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">1</span>
-                                <span>Headset Oculus Quest VR</span>
+                                <span class="bg-salmon-50 dark:bg-salmon-900/30 text-salmon-700 dark:text-salmon-300 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">1</span>
+                                <span class="dark:text-zinc-300">Headset Oculus Quest VR</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">2</span>
-                                <span>Espaçador para óculos</span>
+                                <span class="bg-salmon-50 dark:bg-salmon-900/30 text-salmon-700 dark:text-salmon-300 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">2</span>
+                                <span class="dark:text-zinc-300">Espaçador para óculos</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">3</span>
-                                <span>Dois (2) controladores Touch</span>
+                                <span class="bg-salmon-50 dark:bg-salmon-900/30 text-salmon-700 dark:text-salmon-300 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">3</span>
+                                <span class="dark:text-zinc-300">Dois (2) controladores Touch</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">4</span>
-                                <span>Duas (2) pilhas AA recarregáveis</span>
+                                <span class="bg-salmon-50 dark:bg-salmon-900/30 text-salmon-700 dark:text-salmon-300 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">4</span>
+                                <span class="dark:text-zinc-300">Duas (2) pilhas AA recarregáveis</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">5</span>
-                                <span>Cabo de energia Oculus (USB-C)</span>
+                                <span class="bg-salmon-50 dark:bg-salmon-900/30 text-salmon-700 dark:text-salmon-300 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">5</span>
+                                <span class="dark:text-zinc-300">Cabo de energia Oculus (USB-C)</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">6</span>
-                                <span>Pano de limpeza de microfibra</span>
+                                <span class="bg-salmon-50 dark:bg-salmon-900/30 text-salmon-700 dark:text-salmon-300 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">6</span>
+                                <span class="dark:text-zinc-300">Pano de limpeza de microfibra</span>
                             </li>
                         </ul>
                         
-                        <!-- Image Slot: Kit Content -->
                         <!-- Image Slots: Kit Content -->
-                        <div class="mt-8 border-t border-slate-100 pt-6">
-                            <p class="text-sm font-semibold text-slate-500 mb-2">Visão geral do Kit:</p>
+                        <div class="mt-8 border-t border-slate-100 dark:border-zinc-800 pt-6">
+                            <p class="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-2">Visão geral do Kit:</p>
                             <img src="conteudo-kit.jpg" alt="Foto do conteúdo do kit" 
-                                 class="w-full h-auto max-h-96 object-contain bg-slate-100 rounded-lg border border-slate-200"
-                                 onerror="this.src='https://placehold.co/800x400/f1f5f9/475569?text=Coloque+o+arquivo%0Aconteudo-kit.jpg+aqui'; this.onerror=null;">
+                                 class="w-full h-auto max-h-96 object-contain bg-slate-100 dark:bg-black rounded-lg border border-slate-200 dark:border-zinc-800"
+                                 onerror="this.src='https://placehold.co/800x400/18181b/52525b?text=Coloque+o+arquivo%0Aconteudo-kit.jpg+aqui'; this.onerror=null;">
                         </div>
 
-                        <div class="mt-6 p-4 bg-amber-50 text-amber-800 rounded-lg border border-amber-200 text-sm">
+                        <div class="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-200 rounded-lg border border-amber-200 dark:border-amber-900 text-sm">
                             <strong>Nota:</strong> Certifique-se de que todos esses itens estejam incluídos ao devolver o dispositivo. Kits com itens faltando não serão aceitos.
                         </div>
                     </div>
@@ -175,38 +344,38 @@
 
                 <!-- Before Using -->
                 <section id="before" class="mb-16 scroll-mt-24">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <span class="bg-rose-100 text-rose-600 p-2 rounded-lg"><i data-lucide="alert-triangle"></i></span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-300 p-2 rounded-lg"><i data-lucide="alert-triangle"></i></span>
                         Antes de usar o dispositivo
                     </h2>
                     
                     <div class="space-y-6">
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                            <h3 class="font-bold text-lg mb-3 flex items-center gap-2">
+                        <div class="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm transition-colors duration-300">
+                            <h3 class="font-bold text-lg mb-3 flex items-center gap-2 text-slate-900 dark:text-white">
                                 <i data-lucide="glasses" class="w-5 h-5 text-slate-400"></i> Para quem usa óculos
                             </h3>
-                            <p class="text-slate-600">Certifique-se de que sua armação tenha menos de <strong>142 mm de largura</strong> e menos de <strong>50 mm de altura</strong>.</p>
+                            <p class="text-slate-600 dark:text-zinc-400">Certifique-se de que sua armação tenha menos de <strong>142 mm de largura</strong> e menos de <strong>50 mm de altura</strong>.</p>
                         </div>
 
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                            <h3 class="font-bold text-lg mb-3 flex items-center gap-2">
+                        <div class="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm transition-colors duration-300">
+                            <h3 class="font-bold text-lg mb-3 flex items-center gap-2 text-slate-900 dark:text-white">
                                 <i data-lucide="user-check" class="w-5 h-5 text-slate-400"></i> Contas
                             </h3>
-                            <p class="text-slate-600 mb-2">Decida se usará a conta Facebook/Meta da instituição ou sua conta pessoal:</p>
-                            <ul class="list-disc pl-5 space-y-2 text-slate-600">
+                            <p class="text-slate-600 dark:text-zinc-400 mb-2">Decida se usará a conta Facebook/Meta da instituição ou sua conta pessoal:</p>
+                            <ul class="list-disc pl-5 space-y-2 text-slate-600 dark:text-zinc-400">
                                 <li><strong>Conta Institucional (MCL):</strong> Necessária se quiser usar a biblioteca de conteúdo do laboratório. Nota: Transmissão (casting) requer estas credenciais.</li>
                                 <li><strong>Sua Conta:</strong> Se deseja usar/gerar sua própria biblioteca. Você precisará do app Oculus no seu celular.</li>
                             </ul>
                         </div>
 
                         <div class="grid md:grid-cols-2 gap-6">
-                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-rose-500">
-                                <h3 class="font-bold text-lg mb-2 text-rose-700">Segurança e Área</h3>
-                                <p class="text-slate-600 text-sm">Remova perigos e obstáculos. Deixe um espaço extra (60-90 cm) entre os limites da sua área de jogo e paredes ou móveis.</p>
+                            <div class="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm border-l-4 border-l-rose-500">
+                                <h3 class="font-bold text-lg mb-2 text-rose-700 dark:text-rose-400">Segurança e Área</h3>
+                                <p class="text-slate-600 dark:text-zinc-400 text-sm">Remova perigos e obstáculos. Deixe um espaço extra (60-90 cm) entre os limites da sua área de jogo e paredes ou móveis.</p>
                             </div>
-                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-rose-500">
-                                <h3 class="font-bold text-lg mb-2 text-rose-700">Cuidados com a Lente</h3>
-                                <p class="text-slate-600 text-sm"><strong>NUNCA</strong> use produtos químicos ou álcool nas lentes. Use apenas o pano de microfibra em movimentos circulares. Mantenha longe da luz solar direta para evitar danos permanentes.</p>
+                            <div class="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm border-l-4 border-l-rose-500">
+                                <h3 class="font-bold text-lg mb-2 text-rose-700 dark:text-rose-400">Cuidados com a Lente</h3>
+                                <p class="text-slate-600 dark:text-zinc-400 text-sm"><strong>NUNCA</strong> use produtos químicos ou álcool nas lentes. Use apenas o pano de microfibra em movimentos circulares. Mantenha longe da luz solar direta para evitar danos permanentes.</p>
                             </div>
                         </div>
                     </div>
@@ -214,18 +383,18 @@
 
                 <!-- Instructions Block -->
                 <section id="adjusting" class="mb-16 scroll-mt-24">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <span class="bg-blue-100 text-blue-600 p-2 rounded-lg"><i data-lucide="sliders"></i></span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 p-2 rounded-lg"><i data-lucide="sliders"></i></span>
                         Instruções Básicas
                     </h2>
 
-                    <div class="prose prose-slate max-w-none bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
-                        <h3 class="flex items-center gap-2"><span class="bg-slate-100 px-2 py-1 rounded text-sm font-bold">1</span> Ajustando e vestindo o headset</h3>
-                        <ol class="list-decimal pl-5 space-y-2">
+                    <div class="prose prose-slate dark:prose-invert max-w-none bg-white dark:bg-zinc-900 p-8 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm transition-colors duration-300">
+                        <h3 class="flex items-center gap-2 text-slate-900 dark:text-white"><span class="bg-slate-100 dark:bg-zinc-800 px-2 py-1 rounded text-sm font-bold">1</span> Ajustando e vestindo o headset</h3>
+                        <ol class="list-decimal pl-5 space-y-2 text-slate-600 dark:text-zinc-300">
                             <li>Gire a faixa de cabeça para cima.</li>
                             <li>Ajuste as tiras de Velcro. Solte a tira superior primeiro e depois aperte as laterais.</li>
                             <li>Pressione o visor firmemente contra o rosto e baixe a faixa de cabeça.
-                                <ul class="list-disc pl-5 mt-1 text-slate-500 text-sm">
+                                <ul class="list-disc pl-5 mt-1 text-slate-500 dark:text-zinc-400 text-sm">
                                     <li>Alinhe a parte inferior do visor com as maçãs do rosto.</li>
                                     <li>Traga a faixa para baixo, sobre a parte de trás do crânio.</li>
                                 </ul>
@@ -233,27 +402,26 @@
                         </ol>
 
                         <!-- Image Slots: Headset Adjustment -->
-                        <!-- Alterado para flex-col para ficar uma embaixo da outra -->
                         <div class="flex flex-col gap-8 mt-8 not-prose">
                             <div class="flex flex-col w-full">
                                 <img src="ajuste-1.jpg" alt="Ajuste do Headset 1" 
-                                     class="w-full h-auto max-h-[500px] object-contain bg-slate-100 rounded-lg border border-slate-200 mb-2"
-                                     onerror="this.src='https://placehold.co/800x500/f1f5f9/475569?text=Arquivo:+ajuste-1.jpg'; this.onerror=null;">
-                                <span class="text-sm text-slate-500 italic text-center mt-2">Exemplo: Ajuste das tiras</span>
+                                     class="w-full h-auto max-h-[500px] object-contain bg-slate-100 dark:bg-black rounded-lg border border-slate-200 dark:border-zinc-800 mb-2"
+                                     onerror="this.src='https://placehold.co/800x500/18181b/52525b?text=Arquivo:+ajuste-1.jpg'; this.onerror=null;">
+                                <span class="text-sm text-slate-500 dark:text-zinc-500 italic text-center mt-2">Exemplo: Ajuste das tiras</span>
                             </div>
                             <div class="flex flex-col w-full">
                                 <img src="ajuste-2.jpg" alt="Ajuste do Headset 2" 
-                                     class="w-full h-auto max-h-[500px] object-contain bg-slate-100 rounded-lg border border-slate-200 mb-2"
-                                     onerror="this.src='https://placehold.co/800x500/f1f5f9/475569?text=Arquivo:+ajuste-2.jpg'; this.onerror=null;">
-                                <span class="text-sm text-slate-500 italic text-center mt-2">Exemplo: Posicionamento no rosto</span>
+                                     class="w-full h-auto max-h-[500px] object-contain bg-slate-100 dark:bg-black rounded-lg border border-slate-200 dark:border-zinc-800 mb-2"
+                                     onerror="this.src='https://placehold.co/800x500/18181b/52525b?text=Arquivo:+ajuste-2.jpg'; this.onerror=null;">
+                                <span class="text-sm text-slate-500 dark:text-zinc-500 italic text-center mt-2">Exemplo: Posicionamento no rosto</span>
                             </div>
                         </div>
 
-                        <hr class="my-8 border-slate-100">
+                        <hr class="my-8 border-slate-100 dark:border-zinc-800">
 
-                        <h3 id="controllers" class="flex items-center gap-2 scroll-mt-24"><span class="bg-slate-100 px-2 py-1 rounded text-sm font-bold">2</span> Usando os controladores</h3>
-                        <p>Use os cordões de segurança nos pulsos. Controlador Direito na mão direita, Esquerdo na esquerda.</p>
-                        <div class="bg-slate-50 p-4 rounded-lg my-4">
+                        <h3 id="controllers" class="flex items-center gap-2 scroll-mt-24 text-slate-900 dark:text-white"><span class="bg-slate-100 dark:bg-zinc-800 px-2 py-1 rounded text-sm font-bold">2</span> Usando os controladores</h3>
+                        <p class="text-slate-600 dark:text-zinc-300">Use os cordões de segurança nos pulsos. Controlador Direito na mão direita, Esquerdo na esquerda.</p>
+                        <div class="bg-slate-50 dark:bg-zinc-800/50 p-4 rounded-lg my-4 text-slate-700 dark:text-zinc-200">
                             <h4 class="font-semibold text-sm mb-2">Posição dos dedos:</h4>
                             <ul class="text-sm space-y-1">
                                 <li><strong>Indicador:</strong> No gatilho (atrás).</li>
@@ -263,51 +431,50 @@
                         </div>
 
                         <!-- Image Slots: Controllers -->
-                        <!-- Alterado para flex-col e adicionado shadow-lg para destaque -->
                         <div class="flex flex-col gap-8 mt-8 not-prose">
-                            <div class="flex flex-col w-full bg-white p-2 rounded-xl shadow-lg border-2 border-indigo-50">
+                            <div class="flex flex-col w-full bg-white dark:bg-zinc-900 p-2 rounded-xl shadow-lg border-2 border-salmon-50 dark:border-zinc-700">
                                 <img src="controles-1.jpg" alt="Uso do controle 1" 
-                                     class="w-full h-auto max-h-[600px] object-contain bg-white rounded-lg mb-2"
-                                     onerror="this.src='https://placehold.co/800x600/f1f5f9/475569?text=Arquivo:+controles-1.jpg'; this.onerror=null;">
-                                <span class="text-sm font-medium text-indigo-600 italic text-center py-2">Exemplo: Segurando o controle</span>
+                                     class="w-full h-auto max-h-[600px] object-contain bg-white dark:bg-black rounded-lg mb-2"
+                                     onerror="this.src='https://placehold.co/800x600/18181b/52525b?text=Arquivo:+controles-1.jpg'; this.onerror=null;">
+                                <span class="text-sm font-medium text-salmon-600 dark:text-salmon-400 italic text-center py-2">Exemplo: Segurando o controle</span>
                             </div>
-                            <div class="flex flex-col w-full bg-white p-2 rounded-xl shadow-lg border-2 border-indigo-50">
+                            <div class="flex flex-col w-full bg-white dark:bg-zinc-900 p-2 rounded-xl shadow-lg border-2 border-salmon-50 dark:border-zinc-700">
                                 <img src="controles-2.jpg" alt="Uso do controle 2" 
-                                     class="w-full h-auto max-h-[600px] object-contain bg-white rounded-lg mb-2"
-                                     onerror="this.src='https://placehold.co/800x600/f1f5f9/475569?text=Arquivo:+controles-2.jpg'; this.onerror=null;">
-                                <span class="text-sm font-medium text-indigo-600 italic text-center py-2">Exemplo: Posição dos botões</span>
+                                     class="w-full h-auto max-h-[600px] object-contain bg-white dark:bg-black rounded-lg mb-2"
+                                     onerror="this.src='https://placehold.co/800x600/18181b/52525b?text=Arquivo:+controles-2.jpg'; this.onerror=null;">
+                                <span class="text-sm font-medium text-salmon-600 dark:text-salmon-400 italic text-center py-2">Exemplo: Posição dos botões</span>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Setup & App -->
+                <!-- Setup & App (TURQUESA - MANTIDO) -->
                 <section id="setup" class="mb-16 scroll-mt-24">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <span class="bg-purple-100 text-purple-600 p-2 rounded-lg"><i data-lucide="smartphone"></i></span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-300 p-2 rounded-lg"><i data-lucide="smartphone"></i></span>
                         Configuração Inicial
                     </h2>
                     
-                    <div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="bg-white dark:bg-zinc-900 p-8 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm space-y-6 transition-colors duration-300">
                         <div class="flex items-start gap-4">
-                            <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold shrink-0">1</div>
+                            <div class="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-300 flex items-center justify-center font-bold shrink-0">1</div>
                             <div>
-                                <h4 class="font-bold">Ligue o Headset</h4>
-                                <p class="text-slate-600">Pressione e segure o botão de energia na lateral por 2 segundos.</p>
+                                <h4 class="font-bold text-slate-900 dark:text-white">Ligue o Headset</h4>
+                                <p class="text-slate-600 dark:text-zinc-400">Pressione e segure o botão de energia na lateral por 2 segundos.</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-4">
-                            <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold shrink-0">2</div>
+                            <div class="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-300 flex items-center justify-center font-bold shrink-0">2</div>
                             <div>
-                                <h4 class="font-bold">App Oculus</h4>
-                                <p class="text-slate-600">Baixe o app Oculus (grátis na App Store ou Google Play). Faça login com sua conta.</p>
+                                <h4 class="font-bold text-slate-900 dark:text-white">App Oculus</h4>
+                                <p class="text-slate-600 dark:text-zinc-400">Baixe o app Oculus (grátis na App Store ou Google Play). Faça login com sua conta.</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-4">
-                            <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold shrink-0">3</div>
+                            <div class="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-300 flex items-center justify-center font-bold shrink-0">3</div>
                             <div>
-                                <h4 class="font-bold">Pareamento</h4>
-                                <p class="text-slate-600">No app, vá em <strong>Menu > Dispositivos > ícone (+) > Quest</strong>. Insira o código de 5 dígitos exibido na tela do headset.</p>
+                                <h4 class="font-bold text-slate-900 dark:text-white">Pareamento</h4>
+                                <p class="text-slate-600 dark:text-zinc-400">No app, vá em <strong>Menu > Dispositivos > ícone (+) > Quest</strong>. Insira o código de 5 dígitos exibido na tela do headset.</p>
                             </div>
                         </div>
                     </div>
@@ -315,66 +482,66 @@
 
                 <!-- Guardian -->
                 <section id="guardian" class="mb-16 scroll-mt-24">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <span class="bg-green-100 text-green-600 p-2 rounded-lg"><i data-lucide="shield-check"></i></span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-300 p-2 rounded-lg"><i data-lucide="shield-check"></i></span>
                         Área de Jogo (Guardian)
                     </h2>
                     <div class="grid md:grid-cols-2 gap-6">
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                            <h3 class="font-bold text-lg mb-2 text-indigo-600">Modo Estacionário</h3>
-                            <p class="text-sm text-slate-600">Para jogar sentado ou parado em um lugar.</p>
-                            <div class="mt-4 text-xs font-mono bg-slate-100 p-2 rounded">Área mínima: 1m x 1m</div>
+                        <div class="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm transition-colors duration-300">
+                            <h3 class="font-bold text-lg mb-2 text-indigo-600 dark:text-indigo-400">Modo Estacionário</h3>
+                            <p class="text-sm text-slate-600 dark:text-zinc-400">Para jogar sentado ou parado em um lugar.</p>
+                            <div class="mt-4 text-xs font-mono bg-slate-100 dark:bg-zinc-800 dark:text-zinc-300 p-2 rounded">Área mínima: 1m x 1m</div>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                            <h3 class="font-bold text-lg mb-2 text-indigo-600">Modo Roomscale</h3>
-                            <p class="text-sm text-slate-600">Para movimentação livre pelo espaço.</p>
-                            <div class="mt-4 text-xs font-mono bg-slate-100 p-2 rounded">Área mínima: 2m x 2m</div>
+                        <div class="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm transition-colors duration-300">
+                            <h3 class="font-bold text-lg mb-2 text-indigo-600 dark:text-indigo-400">Modo Roomscale</h3>
+                            <p class="text-sm text-slate-600 dark:text-zinc-400">Para movimentação livre pelo espaço.</p>
+                            <div class="mt-4 text-xs font-mono bg-slate-100 dark:bg-zinc-800 dark:text-zinc-300 p-2 rounded">Área mínima: 2m x 2m</div>
                         </div>
                     </div>
-                    <div class="mt-4 bg-slate-50 p-4 rounded-lg border border-slate-200 text-sm">
+                    <div class="mt-4 bg-slate-50 dark:bg-zinc-900 p-4 rounded-lg border border-slate-200 dark:border-zinc-800 text-sm text-slate-600 dark:text-zinc-400">
                         <strong>Como configurar:</strong> Siga as instruções na tela do headset. Use o controle para tocar o chão e definir o nível do solo, depois desenhe o limite da sua área segura segurando o gatilho.
                     </div>
                 </section>
 
                 <!-- Features Grid -->
                 <section id="apps" class="mb-16 scroll-mt-24">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <span class="bg-orange-100 text-orange-600 p-2 rounded-lg"><i data-lucide="settings"></i></span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-300 p-2 rounded-lg"><i data-lucide="settings"></i></span>
                         Ajustes e Navegação
                     </h2>
                     <div class="grid md:grid-cols-2 gap-6">
                         <!-- Card 1 -->
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                            <h3 class="font-bold flex items-center gap-2 mb-3">
+                        <div class="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm transition-colors duration-300">
+                            <h3 class="font-bold flex items-center gap-2 mb-3 text-slate-900 dark:text-white">
                                 <i data-lucide="eye" class="text-slate-400"></i> Lentes e Volume
                             </h3>
-                            <p class="text-sm text-slate-600 mb-2"><strong>Espaçamento:</strong> Use o controle deslizante na parte inferior esquerda do visor até que a imagem fique nítida.</p>
-                            <p class="text-sm text-slate-600"><strong>Volume:</strong> Botões na parte inferior direita. Porta para fones de ouvido (3.5mm) disponível nas laterais.</p>
+                            <p class="text-sm text-slate-600 dark:text-zinc-400 mb-2"><strong>Espaçamento:</strong> Use o controle deslizante na parte inferior esquerda do visor até que a imagem fique nítida.</p>
+                            <p class="text-sm text-slate-600 dark:text-zinc-400"><strong>Volume:</strong> Botões na parte inferior direita. Porta para fones de ouvido (3.5mm) disponível nas laterais.</p>
                         </div>
                         <!-- Card 2 -->
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                            <h3 class="font-bold flex items-center gap-2 mb-3">
+                        <div class="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm transition-colors duration-300">
+                            <h3 class="font-bold flex items-center gap-2 mb-3 text-slate-900 dark:text-white">
                                 <i data-lucide="grid" class="text-slate-400"></i> Apps e Menu
                             </h3>
-                            <p class="text-sm text-slate-600 mb-2">Pressione o botão <strong>Oculus</strong> para abrir o menu universal.</p>
-                            <ul class="text-sm text-slate-600 list-disc pl-4">
+                            <p class="text-sm text-slate-600 dark:text-zinc-400 mb-2">Pressione o botão <strong>Oculus</strong> para abrir o menu universal.</p>
+                            <ul class="text-sm text-slate-600 dark:text-zinc-400 list-disc pl-4">
                                 <li>Selecione <strong>Apps</strong> (ícone de grade) para ver seus jogos.</li>
                                 <li>Use o app "First Steps" para aprender os controles.</li>
                             </ul>
                         </div>
                         <!-- Card 3 -->
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                            <h3 class="font-bold flex items-center gap-2 mb-3">
+                        <div class="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm transition-colors duration-300">
+                            <h3 class="font-bold flex items-center gap-2 mb-3 text-slate-900 dark:text-white">
                                 <i data-lucide="camera" class="text-slate-400"></i> Passthrough
                             </h3>
-                            <p class="text-sm text-slate-600">Permite ver o mundo real através das câmeras. Ative nas Configurações Rápidas. Dica: Dê dois toques na lateral do headset para ativar (se habilitado).</p>
+                            <p class="text-sm text-slate-600 dark:text-zinc-400">Permite ver o mundo real através das câmeras. Ative nas Configurações Rápidas. Dica: Dê dois toques na lateral do headset para ativar (se habilitado).</p>
                         </div>
                         <!-- Card 4 -->
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                            <h3 class="font-bold flex items-center gap-2 mb-3">
+                        <div class="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm transition-colors duration-300">
+                            <h3 class="font-bold flex items-center gap-2 mb-3 text-slate-900 dark:text-white">
                                 <i data-lucide="power" class="text-slate-400"></i> Desligar
                             </h3>
-                            <ul class="text-sm text-slate-600 list-disc pl-4">
+                            <ul class="text-sm text-slate-600 dark:text-zinc-400 list-disc pl-4">
                                 <li><strong>Sleep:</strong> Pressione o botão Power uma vez.</li>
                                 <li><strong>Desligar Totalmente:</strong> Segure o botão Power e selecione "Power Off" na tela.</li>
                             </ul>
@@ -384,8 +551,8 @@
 
                 <!-- Tips -->
                 <section id="tips" class="mb-16 scroll-mt-24">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <span class="bg-yellow-100 text-yellow-600 p-2 rounded-lg"><i data-lucide="lightbulb"></i></span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 p-2 rounded-lg"><i data-lucide="lightbulb"></i></span>
                         Dicas Úteis
                     </h2>
                     <div class="bg-indigo-900 text-white rounded-xl p-8 shadow-lg">
@@ -407,9 +574,9 @@
                 </section>
 
                 <!-- Footer -->
-                <footer class="border-t border-slate-200 pt-8 mt-12 text-slate-500 text-sm">
+                <footer class="border-t border-slate-200 dark:border-zinc-800 pt-8 mt-12 text-slate-500 dark:text-zinc-500 text-sm">
                     <div class="mb-4">
-                        <h4 class="font-bold text-slate-700 mb-2">Atribuições</h4>
+                        <h4 class="font-bold text-slate-700 dark:text-zinc-400 mb-2">Atribuições</h4>
                         <p>Crisia - NANO - Núcleo de Artes e Novos Organismos.</p>
                         <p class="mt-2 text-xs">Licença: Creative Commons Attribution-NonCommercial 4.0 International.</p>
                     </div>
@@ -467,12 +634,128 @@
             });
 
             navLinks.forEach(a => {
-                a.classList.remove('bg-indigo-50', 'text-indigo-700');
-                a.classList.add('text-slate-600');
+                a.classList.remove('bg-salmon-50', 'dark:bg-zinc-900', 'text-salmon-700', 'dark:text-salmon-300', 'border', 'dark:border-zinc-800');
+                a.classList.add('text-slate-600', 'dark:text-zinc-400');
+                
                 if (a.getAttribute('href').includes(current)) {
-                    a.classList.add('bg-indigo-50', 'text-indigo-700');
-                    a.classList.remove('text-slate-600');
+                    a.classList.add('bg-salmon-50', 'dark:bg-zinc-900', 'text-salmon-700', 'dark:text-salmon-300', 'border', 'dark:border-zinc-800');
+                    a.classList.remove('text-slate-600', 'dark:text-zinc-400');
+                } else {
+                    // Remove border if not active
+                    a.classList.remove('border', 'dark:border-zinc-800');
                 }
+            });
+        });
+
+        // Theme Toggle Logic
+        const html = document.documentElement;
+        const themeBtn = document.getElementById('theme-toggle');
+
+        // Check local storage or system preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        } else {
+            html.classList.remove('dark');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            if (html.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+        });
+
+        // --- LÓGICA DE INTERAÇÃO "GOSMENTA" DO SLIME ---
+        const blobContainer = document.querySelector('.blob-container');
+        const blobCore = document.querySelector('.blob-core');
+        const satellites = document.querySelectorAll('.blob-satellite');
+
+        if (blobContainer && blobCore) {
+            document.addEventListener('mousemove', (e) => {
+                const rect = blobContainer.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                const dx = e.clientX - centerX;
+                const dy = e.clientY - centerY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                // Raio de interação: 400px (começa a sentir de longe)
+                const maxDist = 400;
+
+                if (distance < maxDist) {
+                    // Cálculo de intensidade (0 a 1), quanto mais perto, maior
+                    // Usando curva quadrática para suavizar o início da interação
+                    const rawIntensity = 1 - (distance / maxDist);
+                    const intensity = Math.pow(rawIntensity, 2); 
+
+                    // Movimento de "Atração" (Core tenta alcançar o mouse)
+                    // Multiplicador 0.2 significa que ele move 20% da distância do mouse
+                    const moveX = dx * intensity * 0.25; 
+                    const moveY = dy * intensity * 0.25;
+                    
+                    // Deformação "Stretch" (Esticar)
+                    // Aumenta a escala levemente para parecer que está inchando ou esticando
+                    const stretchScale = 1 + (intensity * 0.15);
+                    
+                    // Aplica transformação no núcleo
+                    // Nota: Isso sobrescreve a animação 'heartbeat-subtle' (transform) momentaneamente,
+                    // criando o efeito de que ele parou de bater para se esticar em direção ao mouse.
+                    blobCore.style.transform = `translate(${moveX}px, ${moveY}px) scale(${stretchScale})`;
+                    
+                    // Efeito "Gosmento/Viscoso" via Blur
+                    // Se estiver muito perto, aumenta o blur para parecer mais líquido
+                    if (intensity > 0.3) {
+                        blobCore.style.backdropFilter = `blur(${8 + intensity * 6}px)`;
+                    } else {
+                        blobCore.style.backdropFilter = `blur(8px)`;
+                    }
+
+                    // Satélites: São puxados com mais força para o centro (aglutinação) ou seguem o mouse
+                    // Aqui fazemos eles seguirem o mouse com "lag" diferente para parecerem soltos
+                    satellites.forEach((sat, index) => {
+                         // Cada satélite tem um peso diferente
+                         const factor = (index + 1) * 0.3;
+                         sat.style.transform = `translate(${moveX * factor}px, ${moveY * factor}px)`;
+                         
+                         // Se muito perto, eles diminuem um pouco como se fossem absorvidos
+                         if (intensity > 0.8) {
+                            sat.style.opacity = `${0.5 + intensity * 0.3}`; // Ficam mais visíveis
+                         }
+                    });
+
+                } else {
+                    // Reset ao afastar o mouse (Volta ao normal)
+                    // Limpar styles inline permite que o CSS volte a controlar (animações keyframes voltam a funcionar)
+                    blobCore.style.transform = '';
+                    blobCore.style.backdropFilter = '';
+                    satellites.forEach(sat => {
+                        sat.style.transform = '';
+                        sat.style.opacity = '';
+                    });
+                }
+            });
+        }
+
+        // Scroll to Top Logic
+        const scrollTopBtn = document.getElementById('scroll-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.remove('opacity-0', 'invisible', 'translate-y-10');
+                scrollTopBtn.classList.add('opacity-100', 'visible', 'translate-y-0');
+            } else {
+                scrollTopBtn.classList.add('opacity-0', 'invisible', 'translate-y-10');
+                scrollTopBtn.classList.remove('opacity-100', 'visible', 'translate-y-0');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
         });
     </script>
