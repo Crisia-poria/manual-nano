@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manual de instruções interativo para o Oculus Quest - Versão Web">
+    <title>Manual do Oculus Quest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* Estilização da barra de rolagem */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        .prose h3 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .prose ul {
+            list-style-type: disc;
+            padding-left: 1.5em;
+            margin-bottom: 1em;
+        }
+        .prose li {
+            margin-bottom: 0.5em;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Mobile Header -->
+    <header class="lg:hidden bg-white border-b border-slate-200 p-4 sticky top-0 z-50 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-2 font-bold text-lg text-indigo-600">
+            <i data-lucide="glasses"></i>
+            <span>Oculus Quest</span>
+        </div>
+        <button id="menu-btn" class="p-2 rounded-md hover:bg-slate-100 transition-colors" aria-label="Abrir menu">
+            <i data-lucide="menu"></i>
+        </button>
+    </header>
+
+    <div class="flex max-w-7xl mx-auto min-h-screen">
+        
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 lg:static lg:w-72 bg-white border-r border-slate-200 overflow-y-auto transition-transform duration-300 z-40 shadow-lg lg:shadow-none">
+            <div class="p-6 sticky top-0 bg-white z-10 hidden lg:block">
+                <div class="flex items-center gap-2 font-bold text-lg text-indigo-600 mb-2">
+                    <!-- Ícone de Manual: Livro Aberto com Circuito e Chip -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <!-- Base do Livro Aberto -->
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                        <!-- Elementos de Circuito (Página Esquerda) -->
+                        <path d="M6 8v3h2"/>
+                        <circle cx="8" cy="11" r="1" fill="currentColor" stroke="none"/>
+                        <!-- Elementos de Chip (Página Direita) -->
+                        <rect x="14" y="8" width="4" height="4" rx="1"/>
+                        <path d="M16 12v3"/>
+                    </svg>
+                    <span>Manual NANO</span>
+                </div>
+                <p class="text-sm text-slate-500">Versão 1.10</p>
+            </div>
+
+            <nav class="px-4 py-2 space-y-1" id="nav-links">
+                <a href="#intro" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg bg-indigo-50 text-indigo-700">
+                    <i data-lucide="box" class="w-4 h-4"></i> Conteúdo do Kit
+                </a>
+                <a href="#before" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                    <i data-lucide="alert-circle" class="w-4 h-4"></i> Antes de Usar
+                </a>
+                <a href="#adjusting" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                    <i data-lucide="sliders" class="w-4 h-4"></i> Ajustes e Uso
+                </a>
+                <a href="#controllers" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                    <i data-lucide="gamepad-2" class="w-4 h-4"></i> Controladores
+                </a>
+                <a href="#setup" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                    <i data-lucide="smartphone" class="w-4 h-4"></i> Configuração (App)
+                </a>
+                <a href="#guardian" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i> Área Guardian
+                </a>
+                <a href="#apps" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                    <i data-lucide="grid" class="w-4 h-4"></i> Apps e Explorar
+                </a>
+                <a href="#tips" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                    <i data-lucide="lightbulb" class="w-4 h-4"></i> Dicas Úteis
+                </a>
+                <div class="h-8"></div> <!-- Spacer -->
+            </nav>
+        </aside>
+
+        <!-- Overlay for mobile sidebar -->
+        <div id="overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
+        <!-- Main Content -->
+        <main class="flex-1 min-w-0">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 pb-24">
+                
+                <!-- Hero Section -->
+                <div class="mb-12 border-b border-slate-200 pb-8">
+                    <h1 class="text-4xl font-bold text-slate-900 mb-4">Manual do Usuário Oculus Quest</h1>
+                    <p class="text-lg text-slate-600">Guia resumido de configuração, uso e cuidados para o headset VR</p>
+                </div>
+
+                <!-- Kit Contents -->
+                <section id="intro" class="mb-16 scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                        <span class="bg-indigo-100 text-indigo-600 p-2 rounded-lg"><i data-lucide="box"></i></span>
+                        Conteúdo do Kit
+                    </h2>
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                        <ul class="grid sm:grid-cols-2 gap-4">
+                            <li class="flex items-start gap-3">
+                                <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">1</span>
+                                <span>Headset Oculus Quest VR</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">2</span>
+                                <span>Espaçador para óculos (já instalado)</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">3</span>
+                                <span>Dois (2) controladores Touch</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">4</span>
+                                <span>Duas (2) pilhas AA recarregáveis (já instaladas)</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">5</span>
+                                <span>Cabo de energia Oculus (USB-C)</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">6</span>
+                                <span>Pano de limpeza de microfibra</span>
+                            </li>
+                        </ul>
+                        
+                        <!-- Image Slot: Kit Content -->
+                        <div class="mt-8 border-t border-slate-100 pt-6">
+                            <p class="text-sm font-semibold text-slate-500 mb-2">Visão geral do Kit:</p>
+                            <img src="conteudo-kit.jpg" alt="Foto do conteúdo do kit" 
+                                 class="w-full h-auto max-h-96 object-contain bg-slate-100 rounded-lg border border-slate-200"
+                                 onerror="this.src='https://placehold.co/800x400/f1f5f9/475569?text=Coloque+o+arquivo%0Aconteudo-kit.jpg+aqui'; this.onerror=null;">
+                            <p class="text-xs text-slate-400 mt-1 italic">Salve sua foto como "conteudo-kit.jpg" na mesma pasta deste arquivo.</p>
+                        </div>
+
+                        <div class="mt-6 p-4 bg-amber-50 text-amber-800 rounded-lg border border-amber-200 text-sm">
+                            <strong>Nota:</strong> Certifique-se de que todos esses itens estejam incluídos ao devolver o dispositivo. Kits com itens faltando não serão aceitos.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Before Using -->
+                <section id="before" class="mb-16 scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                        <span class="bg-rose-100 text-rose-600 p-2 rounded-lg"><i data-lucide="alert-triangle"></i></span>
+                        Antes de usar o dispositivo
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <h3 class="font-bold text-lg mb-3 flex items-center gap-2">
+                                <i data-lucide="glasses" class="w-5 h-5 text-slate-400"></i> Para quem usa óculos
+                            </h3>
+                            <p class="text-slate-600">Certifique-se de que sua armação tenha menos de <strong>142 mm de largura</strong> e menos de <strong>50 mm de altura</strong>.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <h3 class="font-bold text-lg mb-3 flex items-center gap-2">
+                                <i data-lucide="user-check" class="w-5 h-5 text-slate-400"></i> Contas
+                            </h3>
+                            <p class="text-slate-600 mb-2">Decida se usará a conta Facebook/Meta da instituição ou sua conta pessoal:</p>
+                            <ul class="list-disc pl-5 space-y-2 text-slate-600">
+                                <li><strong>Conta Institucional (MCL):</strong> Necessária se quiser usar a biblioteca de conteúdo do laboratório. Nota: Transmissão (casting) requer estas credenciais.</li>
+                                <li><strong>Sua Conta:</strong> Se deseja usar/gerar sua própria biblioteca. Você precisará do app Oculus no seu celular.</li>
+                            </ul>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-rose-500">
+                                <h3 class="font-bold text-lg mb-2 text-rose-700">Segurança e Área</h3>
+                                <p class="text-slate-600 text-sm">Remova perigos e obstáculos. Deixe um espaço extra (60-90 cm) entre os limites da sua área de jogo e paredes ou móveis.</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-rose-500">
+                                <h3 class="font-bold text-lg mb-2 text-rose-700">Cuidados com a Lente</h3>
+                                <p class="text-slate-600 text-sm"><strong>NUNCA</strong> use produtos químicos ou álcool nas lentes. Use apenas o pano de microfibra em movimentos circulares. Mantenha longe da luz solar direta para evitar danos permanentes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Instructions Block -->
+                <section id="adjusting" class="mb-16 scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                        <span class="bg-blue-100 text-blue-600 p-2 rounded-lg"><i data-lucide="sliders"></i></span>
+                        Instruções Básicas
+                    </h2>
+
+                    <div class="prose prose-slate max-w-none bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="flex items-center gap-2"><span class="bg-slate-100 px-2 py-1 rounded text-sm font-bold">1</span> Ajustando e vestindo o headset</h3>
+                        <ol class="list-decimal pl-5 space-y-2">
+                            <li>Gire a faixa de cabeça para cima.</li>
+                            <li>Ajuste as tiras de Velcro. Solte a tira superior primeiro e depois aperte as laterais.</li>
+                            <li>Pressione o visor firmemente contra o rosto e baixe a faixa de cabeça.
+                                <ul class="list-disc pl-5 mt-1 text-slate-500 text-sm">
+                                    <li>Alinhe a parte inferior do visor com as maçãs do rosto.</li>
+                                    <li>Traga a faixa para baixo, sobre a parte de trás do crânio.</li>
+                                </ul>
+                            </li>
+                        </ol>
+
+                        <!-- Image Slots: Headset Adjustment -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 not-prose">
+                            <div class="flex flex-col">
+                                <img src="ajuste-1.jpg" alt="Ajuste do Headset 1" 
+                                     class="w-full h-48 object-cover bg-slate-100 rounded-lg border border-slate-200 mb-2"
+                                     onerror="this.src='https://placehold.co/600x400/f1f5f9/475569?text=Arquivo:+ajuste-1.jpg'; this.onerror=null;">
+                                <span class="text-xs text-slate-400 italic text-center">Exemplo: Ajuste das tiras</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <img src="ajuste-2.jpg" alt="Ajuste do Headset 2" 
+                                     class="w-full h-48 object-cover bg-slate-100 rounded-lg border border-slate-200 mb-2"
+                                     onerror="this.src='https://placehold.co/600x400/f1f5f9/475569?text=Arquivo:+ajuste-2.jpg'; this.onerror=null;">
+                                <span class="text-xs text-slate-400 italic text-center">Exemplo: Posicionamento no rosto</span>
+                            </div>
+                        </div>
+
+                        <hr class="my-6 border-slate-100">
+
+                        <h3 id="controllers" class="flex items-center gap-2 scroll-mt-24"><span class="bg-slate-100 px-2 py-1 rounded text-sm font-bold">2</span> Usando os controladores</h3>
+                        <p>Use os cordões de segurança nos pulsos. Controlador Direito na mão direita, Esquerdo na esquerda.</p>
+                        <div class="bg-slate-50 p-4 rounded-lg my-4">
+                            <h4 class="font-semibold text-sm mb-2">Posição dos dedos:</h4>
+                            <ul class="text-sm space-y-1">
+                                <li><strong>Indicador:</strong> No gatilho (atrás).</li>
+                                <li><strong>Dedo médio:</strong> No botão "Grip" (lateral).</li>
+                                <li><strong>Polegar:</strong> Nos botões A/B (ou X/Y) e analógico.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Image Slots: Controllers -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 not-prose">
+                            <div class="flex flex-col">
+                                <img src="controles-1.jpg" alt="Uso do controle 1" 
+                                     class="w-full h-48 object-cover bg-slate-100 rounded-lg border border-slate-200 mb-2"
+                                     onerror="this.src='https://placehold.co/600x400/f1f5f9/475569?text=Arquivo:+controles-1.jpg'; this.onerror=null;">
+                                <span class="text-xs text-slate-400 italic text-center">Exemplo: Segurando o controle</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <img src="controles-2.jpg" alt="Uso do controle 2" 
+                                     class="w-full h-48 object-cover bg-slate-100 rounded-lg border border-slate-200 mb-2"
+                                     onerror="this.src='https://placehold.co/600x400/f1f5f9/475569?text=Arquivo:+controles-2.jpg'; this.onerror=null;">
+                                <span class="text-xs text-slate-400 italic text-center">Exemplo: Posição dos botões</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Setup & App -->
+                <section id="setup" class="mb-16 scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                        <span class="bg-purple-100 text-purple-600 p-2 rounded-lg"><i data-lucide="smartphone"></i></span>
+                        Configuração Inicial
+                    </h2>
+                    
+                    <div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold shrink-0">1</div>
+                            <div>
+                                <h4 class="font-bold">Ligue o Headset</h4>
+                                <p class="text-slate-600">Pressione e segure o botão de energia na lateral por 2 segundos.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold shrink-0">2</div>
+                            <div>
+                                <h4 class="font-bold">App Oculus</h4>
+                                <p class="text-slate-600">Baixe o app Oculus (grátis na App Store ou Google Play). Faça login com sua conta.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold shrink-0">3</div>
+                            <div>
+                                <h4 class="font-bold">Pareamento</h4>
+                                <p class="text-slate-600">No app, vá em <strong>Menu > Dispositivos > ícone (+) > Quest</strong>. Insira o código de 5 dígitos exibido na tela do headset.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Guardian -->
+                <section id="guardian" class="mb-16 scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                        <span class="bg-green-100 text-green-600 p-2 rounded-lg"><i data-lucide="shield-check"></i></span>
+                        Área de Jogo (Guardian)
+                    </h2>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <h3 class="font-bold text-lg mb-2 text-indigo-600">Modo Estacionário</h3>
+                            <p class="text-sm text-slate-600">Para jogar sentado ou parado em um lugar.</p>
+                            <div class="mt-4 text-xs font-mono bg-slate-100 p-2 rounded">Área mínima: 1m x 1m</div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <h3 class="font-bold text-lg mb-2 text-indigo-600">Modo Roomscale</h3>
+                            <p class="text-sm text-slate-600">Para movimentação livre pelo espaço.</p>
+                            <div class="mt-4 text-xs font-mono bg-slate-100 p-2 rounded">Área mínima: 2m x 2m</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 bg-slate-50 p-4 rounded-lg border border-slate-200 text-sm">
+                        <strong>Como configurar:</strong> Siga as instruções na tela do headset. Use o controle para tocar o chão e definir o nível do solo, depois desenhe o limite da sua área segura segurando o gatilho.
+                    </div>
+                </section>
+
+                <!-- Features Grid -->
+                <section id="apps" class="mb-16 scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                        <span class="bg-orange-100 text-orange-600 p-2 rounded-lg"><i data-lucide="settings"></i></span>
+                        Ajustes e Navegação
+                    </h2>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Card 1 -->
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <h3 class="font-bold flex items-center gap-2 mb-3">
+                                <i data-lucide="eye" class="text-slate-400"></i> Lentes e Volume
+                            </h3>
+                            <p class="text-sm text-slate-600 mb-2"><strong>Espaçamento:</strong> Use o controle deslizante na parte inferior esquerda do visor até que a imagem fique nítida.</p>
+                            <p class="text-sm text-slate-600"><strong>Volume:</strong> Botões na parte inferior direita. Porta para fones de ouvido (3.5mm) disponível nas laterais.</p>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <h3 class="font-bold flex items-center gap-2 mb-3">
+                                <i data-lucide="grid" class="text-slate-400"></i> Apps e Menu
+                            </h3>
+                            <p class="text-sm text-slate-600 mb-2">Pressione o botão <strong>Oculus</strong> para abrir o menu universal.</p>
+                            <ul class="text-sm text-slate-600 list-disc pl-4">
+                                <li>Selecione <strong>Apps</strong> (ícone de grade) para ver seus jogos.</li>
+                                <li>Use o app "First Steps" para aprender os controles.</li>
+                            </ul>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <h3 class="font-bold flex items-center gap-2 mb-3">
+                                <i data-lucide="camera" class="text-slate-400"></i> Passthrough
+                            </h3>
+                            <p class="text-sm text-slate-600">Permite ver o mundo real através das câmeras. Ative nas Configurações Rápidas. Dica: Dê dois toques na lateral do headset para ativar (se habilitado).</p>
+                        </div>
+                        <!-- Card 4 -->
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <h3 class="font-bold flex items-center gap-2 mb-3">
+                                <i data-lucide="power" class="text-slate-400"></i> Desligar
+                            </h3>
+                            <ul class="text-sm text-slate-600 list-disc pl-4">
+                                <li><strong>Sleep:</strong> Pressione o botão Power uma vez.</li>
+                                <li><strong>Desligar Totalmente:</strong> Segure o botão Power e selecione "Power Off" na tela.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tips -->
+                <section id="tips" class="mb-16 scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                        <span class="bg-yellow-100 text-yellow-600 p-2 rounded-lg"><i data-lucide="lightbulb"></i></span>
+                        Dicas Úteis
+                    </h2>
+                    <div class="bg-indigo-900 text-white rounded-xl p-8 shadow-lg">
+                        <div class="mb-6">
+                            <h3 class="text-xl font-bold mb-2 flex items-center gap-2"><i data-lucide="cast"></i> Transmissão (Casting)</h3>
+                            <p class="text-indigo-200 text-sm mb-4">Permite que outras pessoas vejam o que você vê no computador.</p>
+                            <ol class="list-decimal pl-5 space-y-2 text-sm text-indigo-100">
+                                <li>Computador e Headset devem estar na <strong>mesma rede Wi-Fi</strong>.</li>
+                                <li>No PC, acesse <a href="https://oculus.com/casting" target="_blank" class="underline hover:text-white">oculus.com/casting</a> e logue.</li>
+                                <li>No Headset: Menu Universal -> Compartilhar (Share) -> Cast.</li>
+                            </ol>
+                        </div>
+                        <hr class="border-indigo-700 my-6">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2 flex items-center gap-2"><i data-lucide="video"></i> Gravar Vídeo</h3>
+                            <p class="text-indigo-200 text-sm">No controle Direito, aperte o botão Oculus -> Compartilhar -> Gravar Vídeo.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Footer -->
+                <footer class="border-t border-slate-200 pt-8 mt-12 text-slate-500 text-sm">
+                    <div class="mb-4">
+                        <h4 class="font-bold text-slate-700 mb-2">Atribuições</h4>
+                        <p>Crisia - NANO - Núcleo de Artes e Novos Organismos.</p>
+                        <p class="mt-2 text-xs">Licença: Creative Commons Attribution-NonCommercial 4.0 International.</p>
+                    </div>
+                    <p class="text-center mt-8">&copy; 2025 - Versão web Não Oficial para Consulta.</p>
+                </footer>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Script for interactivity -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Mobile Menu Logic
+        const menuBtn = document.getElementById('menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const navLinks = document.querySelectorAll('#nav-links a');
+
+        function toggleMenu() {
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+
+        // Close menu when clicking a link on mobile
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) { // lg breakpoint
+                    toggleMenu();
+                }
+            });
+        });
+
+        // Active Link Highlighting on Scroll
+        const sections = document.querySelectorAll('section');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(a => {
+                a.classList.remove('bg-indigo-50', 'text-indigo-700');
+                a.classList.add('text-slate-600');
+                if (a.getAttribute('href').includes(current)) {
+                    a.classList.add('bg-indigo-50', 'text-indigo-700');
+                    a.classList.remove('text-slate-600');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
