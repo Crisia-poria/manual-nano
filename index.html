@@ -138,7 +138,7 @@
                             </li>
                             <li class="flex items-start gap-3">
                                 <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">2</span>
-                                <span>Espaçador para óculos (já instalado)</span>
+                                <span>Espaçador para óculos</span>
                             </li>
                             <li class="flex items-start gap-3">
                                 <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">3</span>
@@ -146,7 +146,7 @@
                             </li>
                             <li class="flex items-start gap-3">
                                 <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">4</span>
-                                <span>Duas (2) pilhas AA recarregáveis (já instaladas)</span>
+                                <span>Duas (2) pilhas AA recarregáveis</span>
                             </li>
                             <li class="flex items-start gap-3">
                                 <span class="bg-indigo-50 text-indigo-700 font-bold w-6 h-6 flex items-center justify-center rounded-full text-sm shrink-0">5</span>
@@ -159,12 +159,12 @@
                         </ul>
                         
                         <!-- Image Slot: Kit Content -->
+                        <!-- Image Slots: Kit Content -->
                         <div class="mt-8 border-t border-slate-100 pt-6">
                             <p class="text-sm font-semibold text-slate-500 mb-2">Visão geral do Kit:</p>
                             <img src="conteudo-kit.jpg" alt="Foto do conteúdo do kit" 
                                  class="w-full h-auto max-h-96 object-contain bg-slate-100 rounded-lg border border-slate-200"
                                  onerror="this.src='https://placehold.co/800x400/f1f5f9/475569?text=Coloque+o+arquivo%0Aconteudo-kit.jpg+aqui'; this.onerror=null;">
-                            <p class="text-xs text-slate-400 mt-1 italic">Salve sua foto como "conteudo-kit.jpg" na mesma pasta deste arquivo.</p>
                         </div>
 
                         <div class="mt-6 p-4 bg-amber-50 text-amber-800 rounded-lg border border-amber-200 text-sm">
@@ -233,22 +233,23 @@
                         </ol>
 
                         <!-- Image Slots: Headset Adjustment -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 not-prose">
-                            <div class="flex flex-col">
+                        <!-- Alterado para flex-col para ficar uma embaixo da outra -->
+                        <div class="flex flex-col gap-8 mt-8 not-prose">
+                            <div class="flex flex-col w-full">
                                 <img src="ajuste-1.jpg" alt="Ajuste do Headset 1" 
-                                     class="w-full h-48 object-cover bg-slate-100 rounded-lg border border-slate-200 mb-2"
-                                     onerror="this.src='https://placehold.co/600x400/f1f5f9/475569?text=Arquivo:+ajuste-1.jpg'; this.onerror=null;">
-                                <span class="text-xs text-slate-400 italic text-center">Exemplo: Ajuste das tiras</span>
+                                     class="w-full h-auto max-h-[500px] object-contain bg-slate-100 rounded-lg border border-slate-200 mb-2"
+                                     onerror="this.src='https://placehold.co/800x500/f1f5f9/475569?text=Arquivo:+ajuste-1.jpg'; this.onerror=null;">
+                                <span class="text-sm text-slate-500 italic text-center mt-2">Exemplo: Ajuste das tiras</span>
                             </div>
-                            <div class="flex flex-col">
+                            <div class="flex flex-col w-full">
                                 <img src="ajuste-2.jpg" alt="Ajuste do Headset 2" 
-                                     class="w-full h-48 object-cover bg-slate-100 rounded-lg border border-slate-200 mb-2"
-                                     onerror="this.src='https://placehold.co/600x400/f1f5f9/475569?text=Arquivo:+ajuste-2.jpg'; this.onerror=null;">
-                                <span class="text-xs text-slate-400 italic text-center">Exemplo: Posicionamento no rosto</span>
+                                     class="w-full h-auto max-h-[500px] object-contain bg-slate-100 rounded-lg border border-slate-200 mb-2"
+                                     onerror="this.src='https://placehold.co/800x500/f1f5f9/475569?text=Arquivo:+ajuste-2.jpg'; this.onerror=null;">
+                                <span class="text-sm text-slate-500 italic text-center mt-2">Exemplo: Posicionamento no rosto</span>
                             </div>
                         </div>
 
-                        <hr class="my-6 border-slate-100">
+                        <hr class="my-8 border-slate-100">
 
                         <h3 id="controllers" class="flex items-center gap-2 scroll-mt-24"><span class="bg-slate-100 px-2 py-1 rounded text-sm font-bold">2</span> Usando os controladores</h3>
                         <p>Use os cordões de segurança nos pulsos. Controlador Direito na mão direita, Esquerdo na esquerda.</p>
@@ -262,18 +263,19 @@
                         </div>
 
                         <!-- Image Slots: Controllers -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 not-prose">
-                            <div class="flex flex-col">
+                        <!-- Alterado para flex-col e adicionado shadow-lg para destaque -->
+                        <div class="flex flex-col gap-8 mt-8 not-prose">
+                            <div class="flex flex-col w-full bg-white p-2 rounded-xl shadow-lg border-2 border-indigo-50">
                                 <img src="controles-1.jpg" alt="Uso do controle 1" 
-                                     class="w-full h-48 object-cover bg-slate-100 rounded-lg border border-slate-200 mb-2"
-                                     onerror="this.src='https://placehold.co/600x400/f1f5f9/475569?text=Arquivo:+controles-1.jpg'; this.onerror=null;">
-                                <span class="text-xs text-slate-400 italic text-center">Exemplo: Segurando o controle</span>
+                                     class="w-full h-auto max-h-[600px] object-contain bg-white rounded-lg mb-2"
+                                     onerror="this.src='https://placehold.co/800x600/f1f5f9/475569?text=Arquivo:+controles-1.jpg'; this.onerror=null;">
+                                <span class="text-sm font-medium text-indigo-600 italic text-center py-2">Exemplo: Segurando o controle</span>
                             </div>
-                            <div class="flex flex-col">
+                            <div class="flex flex-col w-full bg-white p-2 rounded-xl shadow-lg border-2 border-indigo-50">
                                 <img src="controles-2.jpg" alt="Uso do controle 2" 
-                                     class="w-full h-48 object-cover bg-slate-100 rounded-lg border border-slate-200 mb-2"
-                                     onerror="this.src='https://placehold.co/600x400/f1f5f9/475569?text=Arquivo:+controles-2.jpg'; this.onerror=null;">
-                                <span class="text-xs text-slate-400 italic text-center">Exemplo: Posição dos botões</span>
+                                     class="w-full h-auto max-h-[600px] object-contain bg-white rounded-lg mb-2"
+                                     onerror="this.src='https://placehold.co/800x600/f1f5f9/475569?text=Arquivo:+controles-2.jpg'; this.onerror=null;">
+                                <span class="text-sm font-medium text-indigo-600 italic text-center py-2">Exemplo: Posição dos botões</span>
                             </div>
                         </div>
                     </div>
